@@ -32,18 +32,22 @@ class Differ:
     def annotate_diffs(self) -> None:
         diffed_bookmarks = []
         doc_one_diffs, doc_two_diffs = self.compare()
-        diffed_pdf = fitz.Document()
         with fitz.Document(str(self.pdf_file_one.document_path)) as f:
             pages_with_differences = set([self.pdf_file_one.text_dict[diff][1] for diff in doc_one_diffs])
-            for page in pages_with_differences:
-                diffed_bookmarks.append((1, "DIFF", page+1))
-                for diff in doc_one_diffs:
-                    coords, page_number = self.pdf_file_one.text_dict[diff]
-                    page = f[page_number]
-                    page.add_highlight_annot(coords)
-                diffed_pdf.insert_pdf(f, from_page=page_number, to_page=page_number)
-        diffed_pdf.set_toc(diffed_bookmarks)
-        diffed_pdf.save(str(paths.diffed_pdf))
+            if pages_with_differences:
+                diffed_pdf = fitz.Document()
+                for page in pages_with_differences:
+                    diffed_bookmarks.append((1, "DIFF", page + 1))
+                    for diff in doc_one_diffs:
+                        coords, page_number = self.pdf_file_one.text_dict[diff]
+                        page = f[page_number]
+                        page.add_highlight_annot(coords)
+                    diffed_pdf.insert_pdf(f, from_page=page_number, to_page=page_number)
+
+                diffed_pdf.set_toc(diffed_bookmarks)
+                diffed_pdf.save(str(paths.diffed_pdf))
+            else:
+                print("No differences found between the two PDFs.")
 
 
 def read_pdf(pdf_doc: Path) -> PdfData:

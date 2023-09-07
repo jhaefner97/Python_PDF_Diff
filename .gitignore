@@ -1,2 +1,5 @@
 .idea/
 venv/
+incoming/
+Python/__pycache__/
+Python/__pycache__/paths.cpython-310.pyc Python/__pycache__/pdf_tools.cpython-310.pyc

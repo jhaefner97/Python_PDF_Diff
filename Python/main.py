@@ -1,12 +1,10 @@
 import pdf_tools
 
-from paths import paths
 
-
-class App():
+class App:
 
     def __init__(self):
-            self.pdf_data_objs = []
+        self.pdf_data_objs = []
 
     def main(self) -> None:
         for input_doc in pdf_tools.iterate_over_incoming_pdf_files():
